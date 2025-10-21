@@ -130,9 +130,15 @@ std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std
 
     if (_logger.level() >= ov::log::Level::INFO) {
         std::uint32_t result = 1171117u;
-        for (const uint8_t* it = blobPtr; it != blobPtr + blobSize; ++it) {
-            result = ((result << 7) + result) + static_cast<uint32_t>(*it);
-        }
+        // for (const uint8_t* it = blobPtr; it != blobPtr + blobSize; ++it) {
+        //     result = ((result << 7) + result) + static_cast<uint32_t>(*it);
+        // }
+
+        std::istream_iterator<uint8_t> stream_it(stream);
+        std::istream_iterator<uint8_t> eos;
+        for_each(stream_it, eos, [&](uint8_t a) {
+            result = ((result << 7) + result) + static_cast<uint32_t>(*stream_it);
+        });
 
         std::stringstream str;
         str << "Blob size: " << blobSize << ", hash: " << std::hex << result;
