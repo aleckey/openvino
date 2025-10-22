@@ -90,7 +90,7 @@ ze_graph_handle_t Graph::get_handle() const {
     return _graphDesc._handle;
 }
 
-std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std::ostream& stream) const {
+std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std::iostream& stream) const {
     const uint8_t* blobPtr = nullptr;
     size_t blobSize;
     std::vector<uint8_t> blobVec;  // plugin needs to keep a copy of the blob for older drivers
@@ -134,13 +134,12 @@ std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std
         //     result = ((result << 7) + result) + static_cast<uint32_t>(*it);
         // }
 
-        std::istream<char> streamIn;
-        copy(ostreambuf_iterator<char>(stream), ostreambuf_iterator<char>(), istreambuf_iterator<char>(streamIn));
+        std::istream<char> streamIn(stream);
         streamIn.seekg(0, std::ios::beg)  // rewind to start
         
         std::istream_iterator<char> eos;
         for_each(streamIn, eos, [&](char a) {
-            result = ((result << 7) + result) + static_cast<uint32_t>(*stream_it);
+            result = ((result << 7) + result) + static_cast<uint32_t>(*streamIn);
         });
 
         std::stringstream str;
