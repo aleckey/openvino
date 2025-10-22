@@ -134,9 +134,12 @@ std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std
         //     result = ((result << 7) + result) + static_cast<uint32_t>(*it);
         // }
 
-        std::iostream_iterator<char> stream_it(stream);
-        std::iostream_iterator<char> eos;
-        for_each(stream_it, eos, [&](char a) {
+        std::istream<char> streamIn;
+        copy(ostreambuf_iterator<char>(stream), ostreambuf_iterator<char>(), istreambuf_iterator<char>(streamIn));
+        streamIn.seekg(0, std::ios::beg)  // rewind to start
+        
+        std::istream_iterator<char> eos;
+        for_each(streamIn, eos, [&](char a) {
             result = ((result << 7) + result) + static_cast<uint32_t>(*stream_it);
         });
 
