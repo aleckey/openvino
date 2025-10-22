@@ -135,7 +135,7 @@ std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std
         // }
 
         std::istream<char> streamIn(stream);
-        streamIn.seekg(0, std::ios::beg)  // rewind to start
+        streamIn.seekg(0, std::ios::beg);  // rewind to start
         
         std::istream_iterator<char> eos;
         for_each(streamIn, eos, [&](char a) {
