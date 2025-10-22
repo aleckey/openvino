@@ -134,8 +134,8 @@ std::pair<uint64_t, std::optional<std::vector<uint64_t>>> Graph::export_blob(std
         //     result = ((result << 7) + result) + static_cast<uint32_t>(*it);
         // }
 
-        std::istream_iterator<char> stream_it(stream);
-        std::istream_iterator<char> eos;
+        std::iostream_iterator<char> stream_it(stream);
+        std::iostream_iterator<char> eos;
         for_each(stream_it, eos, [&](char a) {
             result = ((result << 7) + result) + static_cast<uint32_t>(*stream_it);
         });
